@@ -17,78 +17,37 @@ type Point struct {
 	Y int
 }
 
-// Line (A,B)
-type Line struct {
-	A Point
-	B Point
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func max(a, b int) int {
-	if a < b {
-		return b
-	}
-	return a
-}
-
-func intersect(u, v Line) (bool, Point) {
-
-	isUHorizontal := u.A.X == u.B.X
-	isVHorizontal := v.A.X == v.B.X
-
-	// one is horizontal and other is vertical
-	if (isUHorizontal && !isVHorizontal) || (!isUHorizontal && isVHorizontal) {
-		horizontal, vertical := u, v
-		if isVHorizontal {
-			horizontal, vertical = v, u
-		}
-
-		if min(horizontal.A.X, horizontal.B.X) <= vertical.A.X && vertical.A.X <= max(horizontal.A.X, horizontal.B.X) &&
-			min(vertical.A.Y, vertical.B.Y) <= horizontal.A.Y && horizontal.A.Y <= max(vertical.A.Y, vertical.B.Y) {
-			return true, Point{vertical.A.X, horizontal.A.Y}
-		}
-
-	}
-
-	return false, Point{}
-
-}
-
-func parse(path string) []Line {
+func parse(path string) map[Point]int {
 
 	directions := strings.Split(strings.TrimSpace(path), ",")
-	var points []Point = nil
-	var lines []Line = nil
-	points = append(points, Point{0, 0})
-	for i, v := range directions {
+	grid := make(map[Point]int)
+	current := Point{0, 0}
+
+	step := 0
+	grid[current] = step
+	for _, v := range directions {
 		offset, _ := strconv.Atoi(v[1:])
 		// fmt.Println(v, offset)
-
-		switch v[0] {
-		case 'R':
-			points = append(points, Point{points[i].X + offset, points[i].Y})
-		case 'L':
-			points = append(points, Point{points[i].X - offset, points[i].Y})
-		case 'U':
-			points = append(points, Point{points[i].X, points[i].Y - offset})
-		case 'D':
-			points = append(points, Point{points[i].X, points[i].Y + offset})
+		for j := 0; j < offset; j++ {
+			switch v[0] {
+			case 'R':
+				current.X++
+			case 'L':
+				current.X--
+			case 'U':
+				current.Y--
+			case 'D':
+				current.Y++
+			}
+			step++
+			_, ok := grid[current]
+			if !ok {
+				grid[current] = step
+			}
 		}
 	}
 
-	for i, point := range points {
-		if i > 0 {
-			lines = append(lines, Line{points[i-1], point})
-		}
-	}
-
-	return lines
+	return grid
 }
 
 // Abs returns the absolute value of x.
@@ -99,9 +58,16 @@ func Abs(x int) int {
 	return x
 }
 
+func min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
 func main() {
 
-	file, err := os.Open("sample.txt")
+	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -110,18 +76,19 @@ func main() {
 	scanner := bufio.NewReader(file)
 	path1, _ := scanner.ReadString('\n')
 	path2, _ := scanner.ReadString('\n')
-	lines1, lines2 := parse(path1), parse(path2)
-	fmt.Println(lines1)
-	fmt.Println(lines2)
+	grid1, grid2 := parse(path1), parse(path2)
 
-	for i, l1 := range lines1 {
-		for j, l2 := range lines2 {
-			if i > 0 && j > 0 {
-				hasPoint, point := intersect(l1, l2)
-				if hasPoint {
-					fmt.Println(point, Abs(point.X)+Abs(point.Y))
-				}
-			}
+	solution1 := 10000000
+	solution2 := 10000000
+	for point, step1 := range grid1 {
+		step2, ok := grid2[point]
+		if ok && Abs(point.X)+Abs(point.Y) > 0 {
+			solution1 = min(solution1, Abs(point.X)+Abs(point.Y))
+			solution2 = min(solution2, step1+step2)
+			// fmt.Println(p1)
 		}
 	}
+
+	fmt.Println(solution1)
+	fmt.Println(solution2)
 }
