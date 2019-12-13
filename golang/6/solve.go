@@ -62,7 +62,6 @@ func main() {
 	for you != santa {
 		diff += 2
 		you, santa = prev[you], prev[santa]
-		fmt.Println(you, santa)
 	}
 
 	// excluding you and santa
