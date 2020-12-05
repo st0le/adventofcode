@@ -42,19 +42,6 @@ namespace _4
                     && ecl != string.Empty
                     && pid != string.Empty;
             }
-
-            public void Debug()
-            {
-                Console.WriteLine("byr " + (1920 <= byr && byr <= 2002) + " " + byr);
-                Console.WriteLine("iyr " + (2010 <= iyr && iyr <= 2020) + " " + iyr);
-                Console.WriteLine("eyr " + (2020 <= eyr && eyr <= 2030) + " " + eyr);
-                Console.WriteLine("hgt " + IsValidHeight() + " " + hgt);
-                Console.WriteLine("hcl " + Regex.IsMatch(hcl, "#[0-9a-f]{6}") + " " + hcl);
-                Console.WriteLine("ecl " + Regex.IsMatch(ecl, "amb|blu|brn|gry|grn|hzl|oth") + " " + ecl);
-                Console.WriteLine("pid " + Regex.IsMatch(pid, "[0-9]{9}") + " " + pid);
-                Console.WriteLine();
-            }
-
             public bool IsValid2()
             {
                 return 1920 <= byr && byr <= 2002
