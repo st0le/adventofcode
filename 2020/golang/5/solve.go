@@ -9,12 +9,10 @@ import (
 )
 
 func decode(pass string) int64 {
-	fb := strings.ReplaceAll(strings.ReplaceAll(pass[0:7], "F", "0"), "B", "1")
-	lr := strings.ReplaceAll(strings.ReplaceAll(pass[7:], "L", "0"), "R", "1")
-	row, _ := strconv.ParseInt(fb, 2, 64)
-	col, _ := strconv.ParseInt(lr, 2, 64)
-	return row*8 + col
-
+	pass = strings.ReplaceAll(strings.ReplaceAll(pass, "F", "0"), "B", "1")
+	pass = strings.ReplaceAll(strings.ReplaceAll(pass, "L", "0"), "R", "1")
+	id, _ := strconv.ParseInt(pass, 2, 64)
+	return id
 }
 
 func main() {

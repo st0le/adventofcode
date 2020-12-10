@@ -33,26 +33,17 @@ namespace _5
 
         private int Decode(string s)
         {
-            int row = 0, col = 0;
-            for (int i = 0; i < 7; i++)
+            int id = 0;
+            for (int i = 0; i < s.Length; i++)
             {
-                if (s[i] == 'B')
+                if (s[i] == 'B' || s[i] == 'R')
                 {
-                    row |= 1;
+                    id |= 1;
                 }
-                row <<= 1;
+                id <<= 1;
             }
-            row >>= 1;
-            for (int i = 7; i < 10; i++)
-            {
-                if (s[i] == 'R')
-                {
-                    col |= 1;
-                }
-                col <<= 1;
-            }
-            col >>= 1;
-            return (row << 3) | col;
+
+            return id >> 1;
         }
     }
 }
