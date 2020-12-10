@@ -36,7 +36,7 @@ namespace _9
             {
                 long min = nums[i], max = nums[i];
                 long s = nums[i];
-                for (int j = i + 1; j < nums.Count; j++)
+                for (int j = i + 1; j < nums.Count && s < target; j++)
                 {
                     min = Math.Min(min, nums[j]);
                     max = Math.Max(max, nums[j]);
